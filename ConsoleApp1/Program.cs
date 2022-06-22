@@ -110,6 +110,85 @@ namespace ConsoleApp1
     }
     public class CoderByteChallange
     {
+        public static string ChessboardTraveling(string str)
+        {
+            int t11 = 0, t12 = 0, t21 = 0, t22 = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '(')
+                {
+                    for (int j = i + 1; j < str.Length; j++)
+                    {
+                        if (str[j] == ')')
+                        {
+                            if (i == 0)
+                            {
+                                t11 = int.Parse(str[i + 1].ToString());
+                                t12 = int.Parse(str[i + 3].ToString());
+                            }
+                            if (i == 5)
+                            {
+                                t21 = int.Parse(str[i + 1].ToString());
+                                t22 = int.Parse(str[i + 3].ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            int xDiff = t21 - t11;
+            int yDiff = t22 - t12;
+            return Steps(xDiff, yDiff).ToString();
+        }
+
+        private static int Steps(int x, int y)
+        {
+            if (x < 0 || y < 0)
+                return 0;
+            if (x == 0 && y == 1)
+                return 1;
+            if (x == 1 && y == 0)
+                return 1;
+
+            return Steps(x - 1, y) + Steps(x, y - 1);
+        }
+
+
+
+        public static int CoinDeterminer(int num)
+        {
+            int count = 0;
+            int[] numbers = new int[] { 1, 5, 7, 9, 11 };
+            for (int i = numbers.Length - 1; i >= 0; i--)
+            {
+                if (num >= numbers[i])
+                {
+                    num -= numbers[i];
+                    count++;
+                }
+            }
+            return count;
+
+        }
+        public static bool SimpleSymbols(string str)
+        {
+            if (!char.IsSymbol(str[0]) || !char.IsSymbol(str[str.Length - 1]))
+            {
+                return false;
+            }
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (i - 1 > 0 && i + 1 < str.Length)
+                {
+                    if (!char.IsSymbol(str[i]) && !char.IsSymbol(str[i - 1]) && !char.IsSymbol(str[i + 1]))
+                    {
+                        return false;
+                    }
+                }
+
+
+            }
+            return true;
+        }
         public static string RomanNumeralReduction(string str)
         {
             int number = RomanToDecimal(str);
@@ -163,7 +242,7 @@ namespace ConsoleApp1
                 }
                 else
                 {
-                    res+= s1;
+                    res += s1;
                     i++;
                 }
             }
