@@ -405,7 +405,7 @@ namespace ConsoleApp1
                         .Substring(numbers.FirstIndex + 1 ?? 0, numbers.LastIndex - 1 ?? 0) + revorcedNumbers[1];
                 }
 
-                s = s + newText + " ";
+                s = s + newText + " "; 
             }
             return s;
 
