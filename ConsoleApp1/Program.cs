@@ -16,100 +16,85 @@ namespace ConsoleApp1
             //Console.WriteLine(FirstReverse(Console.ReadLine()));
             // Console.WriteLine(CoderByteChallange.SwapII(Console.ReadLine()));//6Hello4 8World 7 yes3
             //Console.WriteLine(CoderByteChallange.Palindrome(Console.ReadLine()));
-            Console.WriteLine(CoderByteChallange.RomanNumeralReduction("DDLL"));
+            //Console.WriteLine(CoderByteChallange.RomanNumeralReduction("DDLL"));
+            Console.WriteLine(CoderByteChallange.DashInsert("56730"));
         }
 
     }
 
 
 
-    public class Team
+    public static class CoderByteChallange
     {
-        public string teamName { get; set; }
-        public int noOfPlayers { get; set; }
 
-        public Team(string teamName, int noOfPlayers)
+        //public static int PermutationStep(int num)
+        //{
+
+        //    //string newNum = num.ToString();
+        //    //string firstHalf = "";
+        //    //string secondHalf = "";
+        //    //for (int i = (newNum.Length - 1); i >= 0; i--)
+        //    //{
+
+        //    //    if (int.Parse(newNum[i].ToString()) > int.Parse(newNum[i - 1].ToString()))
+        //    //    {
+        //    //        newNum = (newNum.Substring(i - 1, newNum[i])) + newNum.Substring(2, newNum[i - 1]);
+        //    //        firstHalf = newNum.Substring(0, i);
+        //    //        secondHalf = newNum.Substring(i);
+        //    //        break;
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        return -1;
+        //    //    }
+        //    //}
+        //    //List<char> secondCh = new List<char>();
+        //    //foreach (var item in firstHalf)
+        //    //{
+        //    //    secondCh.Add(item);
+
+        //    //}
+        //    //    secondCh.Sort();
+        //    //var sorted = secondCh
+        //    //return num.ToString().sor;
+
+        //}
+
+        public static List<T> Splice<T>(this List<T> source, int index, int count)
         {
-            this.teamName = teamName;
-            this.noOfPlayers = noOfPlayers;
+            var items = source.GetRange(index, count);
+            source.RemoveRange(index, count);
+            return items;
         }
-
-        public void AddPlayer(int count)
+       
+        public static string DashInsert(string str)
         {
-            noOfPlayers = noOfPlayers + count;
-        }
-
-        public bool RemovePlayer(int count)
-        {
-            noOfPlayers = noOfPlayers - count;
-            if (noOfPlayers < 0)
+            int b = 0;
+            while (b < str.Length - 1)
             {
-                return false;
-            }
-            return true;
-        }
-    }
-
-    public class Subteam : Team
-    {
-
-        public Subteam(string teamName, int noOfPlayers) : base(teamName, noOfPlayers)
-        {
-
-        }
-
-        public void ChangeTeamName(string name)
-        {
-            base.teamName = name;
-        }
-
-    }
-
-    public class Note
-    {
-        public string Name { get; set; }
-        public string State { get; set; }
-    }
-    public class NotesStore
-    {
-        List<Note> _notes;
-        public NotesStore()
-        {
-            _notes = new List<Note>();
-        }
-        public void AddNote(String state, String name)
-        {
-            if (name is null)
-            {
-                throw new Exception("Name cannot be empty");
-            }
-            GetNotes(state);
-            Note note = new Note();
-            note.Name = name;
-            note.State = state;
-            _notes.Add(note);
-
-        }
-        public List<String> GetNotes(String state)
-        {
-            List<string> notes = new List<string>() { "completed", "active", "others" };
-            List<string> searchingNotes = new List<string>();
-            foreach (string note in notes)
-            {
-                if (note == state)
+                if (int.Parse(str[b].ToString()) % 2 == 1
+                    && int.Parse(str[b + 1].ToString()) % 2 == 1)
                 {
-                    searchingNotes.Add(note);
+                    str = str.Substring(0, b + 1) + "-" + str.Substring(b + 1);
+                    b = b + 2;
                 }
-                else if (note != state)
+                else
                 {
-                    throw new Exception($"Invalid state {state}");
+                    b++;
                 }
             }
-            return searchingNotes;
+            return str;
         }
-    }
-    public class CoderByteChallange
-    {
+
+        public static string abcd(string ch)
+        {
+            if (int.Parse(ch.ToString()) % 2 != 0)
+            {
+                return ch + "-";
+            }
+            return ch;
+        }
+
         public static string ChessboardTraveling(string str)
         {
             int t11 = 0, t12 = 0, t21 = 0, t22 = 0;
@@ -405,7 +390,7 @@ namespace ConsoleApp1
                         .Substring(numbers.FirstIndex + 1 ?? 0, numbers.LastIndex - 1 ?? 0) + revorcedNumbers[1];
                 }
 
-                s = s + newText + " "; 
+                s = s + newText + " ";
             }
             return s;
 
@@ -582,6 +567,91 @@ namespace ConsoleApp1
             return S;
 
         }
+        public class Team
+        {
+            public string teamName { get; set; }
+            public int noOfPlayers { get; set; }
+
+            public Team(string teamName, int noOfPlayers)
+            {
+                this.teamName = teamName;
+                this.noOfPlayers = noOfPlayers;
+            }
+
+            public void AddPlayer(int count)
+            {
+                noOfPlayers = noOfPlayers + count;
+            }
+
+            public bool RemovePlayer(int count)
+            {
+                noOfPlayers = noOfPlayers - count;
+                if (noOfPlayers < 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        public class Subteam : Team
+        {
+
+            public Subteam(string teamName, int noOfPlayers) : base(teamName, noOfPlayers)
+            {
+
+            }
+
+            public void ChangeTeamName(string name)
+            {
+                base.teamName = name;
+            }
+
+        }
+
+        public class Note
+        {
+            public string Name { get; set; }
+            public string State { get; set; }
+        }
+        public class NotesStore
+        {
+            List<Note> _notes;
+            public NotesStore()
+            {
+                _notes = new List<Note>();
+            }
+            public void AddNote(String state, String name)
+            {
+                if (name is null)
+                {
+                    throw new Exception("Name cannot be empty");
+                }
+                GetNotes(state);
+                Note note = new Note();
+                note.Name = name;
+                note.State = state;
+                _notes.Add(note);
+
+            }
+            public List<String> GetNotes(String state)
+            {
+                List<string> notes = new List<string>() { "completed", "active", "others" };
+                List<string> searchingNotes = new List<string>();
+                foreach (string note in notes)
+                {
+                    if (note == state)
+                    {
+                        searchingNotes.Add(note);
+                    }
+                    else if (note != state)
+                    {
+                        throw new Exception($"Invalid state {state}");
+                    }
+                }
+                return searchingNotes;
+            }
+        }
 
         //var notesStoreObj = new NotesStore();
         //var n = int.Parse(Console.ReadLine());
@@ -589,6 +659,7 @@ namespace ConsoleApp1
         //{
         //    var operationInfo = Console.ReadLine().Split(' ');
         //    try
+
         //    {
         //        if (operationInfo[0] == "AddNote")
         //            notesStoreObj.AddNote(operationInfo[1], operationInfo.Length == 2 ? "" : operationInfo[2]);
