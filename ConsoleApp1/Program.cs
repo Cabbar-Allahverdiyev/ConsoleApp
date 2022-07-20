@@ -17,7 +17,10 @@ namespace ConsoleApp1
             // Console.WriteLine(CoderByteChallange.SwapII(Console.ReadLine()));//6Hello4 8World 7 yes3
             //Console.WriteLine(CoderByteChallange.Palindrome(Console.ReadLine()));
             //Console.WriteLine(CoderByteChallange.RomanNumeralReduction("DDLL"));
-            Console.WriteLine(CoderByteChallange.DashInsert("56730"));
+            // Console.WriteLine(CoderByteChallange.DashInsert("56730"));
+            //Console.WriteLine(CoderByteChallange.TwoSum(new int[] { 17, 4, 5, 6, 10, 11, 4, -3, -5, 3, 15, 2, 7 }));
+            //Console.WriteLine(CoderByteChallange.FibonacciChecker(34));
+          
         }
 
     }
@@ -26,6 +29,264 @@ namespace ConsoleApp1
 
     public static class CoderByteChallange
     {
+        public static void quadrantLocation(string result, int x, int y)
+        {
+            if (x < 3)
+            {
+                if (y < 3)
+                {
+                    result += ",1";
+                }
+                else if (y >= 3 && y < 6)
+                {
+                    result += ",2";
+                }
+                else if (y >= 6 && y < 9)
+                {
+                    result += ",3";
+                }
+            }
+            else if (x >= 3 && x < 6)
+            {
+                if (y < 3)
+                {
+                    result += ",4";
+                }
+                else if (y >= 3 && y < 6)
+                {
+                    result += ",5";
+                }
+                else if (y >= 6 && y < 9)
+                {
+                    result += ",6";
+                }
+            }
+            else if (x >= 6 && x < 9)
+            {
+                if (y < 3)
+                {
+                    result += ",7";
+                }
+                else if (y >= 3 && y < 6)
+                {
+                    result += ",8";
+                }
+                else if (y >= 6 && y < 9)
+                {
+                    result += ",9";
+                }
+            }
+        }
+        // Overload function but this time we want to find the range of the quadrant
+        // This will aid for when searching the current quadrant to check if the number repeats
+       public static void quadrantLocation(int x, int y, int rowSize, int columnSize)
+        {
+            if (x < 3)
+            {
+                rowSize = 3;
+                if (y < 3)
+                {
+                    columnSize = 3;
+                }
+                else if (y >= 3 && y < 6)
+                {
+                    columnSize = 6;
+                }
+                else if (y >= 6 && y < 9)
+                {
+                    columnSize = 9;
+                }
+            }
+            else if (x >= 3 && x < 6)
+            {
+                rowSize = 6;
+                if (y < 3)
+                {
+                    columnSize = 3;
+                }
+                else if (y >= 3 && y < 6)
+                {
+                    columnSize = 6;
+                }
+                else if (y >= 6 && y < 9)
+                {
+                    columnSize = 9;
+                }
+            }
+            else if (x >= 6 && x < 9)
+            {
+                rowSize = 9;
+                if (y < 3)
+                {
+                    columnSize = 3;
+                }
+                else if (y >= 3 && y < 6)
+                {
+                    columnSize = 6;
+                }
+                else if (y >= 6 && y < 9)
+                {
+                    columnSize = 9;
+                }
+            }
+        }
+
+       public static string SudokuQuadrantChecker(string strArr, int size)
+        {
+            // Removing unnecessary characters such as commas and parentheses
+            
+            //for (int row = 0; row < size; row++)
+            //{
+            //    for (int col = 0; col < strArr[row].length(); col++)
+            //    {
+            //        if (strArr[row][col] == '(' || strArr[row][col] == ')' || strArr[row][col] == ',')
+            //        {
+            //            strArr[row].erase(strArr[row].begin() + col);
+            //        }
+            //    }
+            //}
+
+            // Analyzing the rules
+            string quadrant = "";
+            int rowIndex=0, colIndex=0;
+            for (int x = 0; x < size; x++)
+            {
+                //for (int current = 0; current < size; current++)
+                //{
+                //    for (int y = 0; y < size; y++)
+                //    {
+                //        // Checking for repetition in rows and columns
+                //        if (strArr[x][current] == strArr[x][y] && y != current && strArr[x][current] != 'x') // Rows
+                //        {
+                //            quadrantLocation(quadrant, x, current); // Function call to provide the error location
+                //            break;
+                //        }
+                //        else if (strArr[x][current] == strArr[y][current] && y != x && strArr[x][current] != 'x') // Columns
+                //        {
+                //            quadrantLocation(quadrant, x, current); // Function call to provide the error location
+                //            break;
+                //        }
+                //        else if (strArr[x][current] != 'x')
+                //        {
+                //            quadrantLocation(x, current, rowIndex, colIndex); // Function call to provide the current quadrant we need to analyze
+                //            int i=0, z=0;
+                //            // Switch statements to find the starting index for the current quadrant
+                //            switch (rowIndex)
+                //            {
+                //                case 3:
+                //                    i = 0;
+                //                    break;
+                //                case 6:
+                //                    i = 3;
+                //                    break;
+                //                case 9:
+                //                    i = 6;
+                //                    break;
+                //            }
+                //            switch (colIndex)
+                //            {
+                //                case 3:
+                //                    z = 0;
+                //                    break;
+                //                case 6:
+                //                    z = 3;
+                //                    break;
+                //                case 9:
+                //                    z = 6;
+                //                    break;
+                //            }
+                //            // Loop to check if numbers repeat in the current quadrant
+                //            //for (i; i < rowIndex; i++)
+                //            //{
+                //            //    for (z; z < colIndex; z++)
+                //            //    {
+                //            //        if (x == i && z == current)
+                //            //        {
+                //            //            continue;
+                //            //        }
+                //            //        else if (strArr[x][current] == strArr[i][z]) // Check if the numbers repeat
+                //            //        {
+                //            //            // Function call to find error location when the quadrant contains repeating numbers
+                //            //            quadrantLocation(quadrant, i, z);
+                //            //            break;
+                //            //        }
+                //            //    }
+                //            //}
+                //        }
+                //    }
+                //}
+            }
+
+            if (quadrant.Length > 0)
+            {
+                quadrant.Remove(quadrant[0] + 0);
+                for (int r = 0; r < quadrant.Length; r++) // Safeguard in the case we have the same quadrant listed multiple times
+                {
+                    if (char.IsDigit(quadrant[r]))
+                    {
+                        for (int t = 0; t < quadrant.Length; t++)
+                        {
+                            if (t == r)
+                            {
+                                continue;
+                            }
+                            else if (char.IsDigit(quadrant[t]) && quadrant[r] == quadrant[t])
+                            {
+                                quadrant.Remove(quadrant[0] + t);
+                                quadrant.Remove(quadrant[0] + (t - 1));
+                            }
+                        }
+                    }
+                }
+                return quadrant;
+            }
+            else
+            {
+                return "legal";
+            }
+        }
+
+
+        public static string FibonacciChecker(int num)
+        {
+            int fn = 0, firstFn = 1, sum = firstFn + 1;
+            while (fn < num)
+            {
+                if (fn != 0)
+                {
+                    firstFn = sum;
+                    sum = fn;
+                }
+                fn = sum + firstFn;
+            }
+            if (fn == num||num==1||num==2)
+            {
+                return "yes";
+            }
+            return "no";
+
+        }
+        public static string TwoSum(int[] arr)
+        {
+            string sum = "";
+            for (int i = 1; i < arr.Length; i++)
+            {
+                for (int j = i + 1; j < arr.Length; j++)
+                {
+                    if (arr[i] + arr[j] == arr[0])
+                    {
+                        sum += $"{arr[i]},{arr[j]} ";
+                    }
+                }
+            }
+            if (sum.Length == 0)
+            {
+                return "-1";
+            }
+            // code goes here  
+            return sum;
+
+        }
 
         //public static int PermutationStep(int num)
         //{
@@ -66,7 +327,7 @@ namespace ConsoleApp1
             source.RemoveRange(index, count);
             return items;
         }
-       
+
         public static string DashInsert(string str)
         {
             int b = 0;
