@@ -20,7 +20,9 @@ namespace ConsoleApp1
             // Console.WriteLine(CoderByteChallange.DashInsert("56730"));
             //Console.WriteLine(CoderByteChallange.TwoSum(new int[] { 17, 4, 5, 6, 10, 11, 4, -3, -5, 3, 15, 2, 7 }));
             //Console.WriteLine(CoderByteChallange.FibonacciChecker(34));
-          
+            //Console.WriteLine(CoderByteChallange.HappyNumbers(28));Console.WriteLine(CoderByteChallange.HappyNumbers(101));
+            //Console.WriteLine(CoderByteChallange.TripleDouble(465555, 5579));Console.WriteLine(CoderByteChallange.TripleDouble(67844, 66237));
+            Console.WriteLine(CoderByteChallange.PatternChaser("aabbaa"));
         }
 
     }
@@ -29,6 +31,127 @@ namespace ConsoleApp1
 
     public static class CoderByteChallange
     {
+
+        public static string PatternChaser(string str)
+        {
+            if (str.Length > 20) { return null; }
+            if (str.Length < 21)
+            {
+                foreach (char c in str)
+                {
+                    if (!char.IsLetter(c) && !char.IsDigit(c))
+                    {
+                        return null;
+                    }
+                }
+            }
+            int count = 0;
+            string value = "";
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (i+1==str.Length)
+                {
+                    break;
+                }
+                string removed = str;
+                removed=str.Remove(i,  2);
+                if (removed.Contains(str[i].ToString() + str[i+1].ToString()))
+                {
+                    string localStr = str[i].ToString() + str[i + 1].ToString();
+                    int locCount = i + 1;
+                    for (int j = i+1; j < str.Length; j++)
+                    {
+                        if (j + 1 == str.Length)
+                        {
+                            break;
+                        }
+                        removed=removed.Remove(0, 1);
+                        string loclocalStr = localStr;
+                        loclocalStr+=str[j+1].ToString();
+                        if (removed.Contains(loclocalStr))
+                        {
+                            int loclocalCount = j+1;
+                            if (loclocalStr!=value&&loclocalCount>count)
+                            {
+                                count = loclocalCount;
+                                value = loclocalStr;
+                                //continue;
+                            }
+                        }
+                        //continue;
+                    }
+                    value = localStr;
+                    count = locCount;
+                }
+               
+            }
+            // code goes here  
+            return "yes"+value;
+
+        }
+        public static int TripleDouble(int num1, int num2)
+        {
+            string chars1 = num1.ToString();
+            string chars2 = num2.ToString();
+            string value1 = "";
+            string value2 = "";
+            if (chars1.Length >= 3 && chars2.Length >= 2)
+            {
+                for (int i = 2; i < chars1.Length; i++)
+                {
+                    if (chars1[i] == chars1[i - 1] && chars1[i - 1] == chars1[i - 2])
+                    {
+                        value1 = chars1[i].ToString() + chars1[i - 1].ToString() + chars1[i - 2].ToString();
+                    }
+                    if (value1.Length != 0)
+                    {
+                        break;
+                    }
+                }
+                for (int i = 1; i < chars2.Length; i++)
+                {
+                    if (chars2[i] == chars2[i - 1])
+                    {
+                        value2 = chars2[i].ToString() + chars2[i - 1].ToString();
+                    }
+                    if (value2.Length != 0)
+                    {
+                        break;
+                    }
+                }
+                if (value1.Length == 0 || value2.Length == 0) { return 0; }
+                if (value1[0] == value2[0]) { return 1; }
+            }
+            // code goes here  
+            return 0;
+
+            
+        }
+        public static bool HappyNumbers(int n)
+        {
+            HashSet<int> s = new HashSet<int>();
+            s.Add(n);
+            while (true)
+            {
+                if (n == 1) { return true; }
+                n = SumDigitSquare(n);
+                if (s.Contains(n)) { return false; }
+                s.Add(n);
+            }
+        }
+
+        static int SumDigitSquare(int n)
+        {
+            int sq = 0;
+            while (n > 0)
+            {
+                int digit = n % 10;
+                sq += digit * digit;
+                n = n / 10;
+            }
+            return sq;
+        }
+
         public static void quadrantLocation(string result, int x, int y)
         {
             if (x < 3)
@@ -79,7 +202,7 @@ namespace ConsoleApp1
         }
         // Overload function but this time we want to find the range of the quadrant
         // This will aid for when searching the current quadrant to check if the number repeats
-       public static void quadrantLocation(int x, int y, int rowSize, int columnSize)
+        public static void quadrantLocation(int x, int y, int rowSize, int columnSize)
         {
             if (x < 3)
             {
@@ -131,10 +254,10 @@ namespace ConsoleApp1
             }
         }
 
-       public static string SudokuQuadrantChecker(string strArr, int size)
+        public static string SudokuQuadrantChecker(string strArr, int size)
         {
             // Removing unnecessary characters such as commas and parentheses
-            
+
             //for (int row = 0; row < size; row++)
             //{
             //    for (int col = 0; col < strArr[row].length(); col++)
@@ -148,7 +271,7 @@ namespace ConsoleApp1
 
             // Analyzing the rules
             string quadrant = "";
-            int rowIndex=0, colIndex=0;
+            int rowIndex = 0, colIndex = 0;
             for (int x = 0; x < size; x++)
             {
                 //for (int current = 0; current < size; current++)
@@ -259,7 +382,7 @@ namespace ConsoleApp1
                 }
                 fn = sum + firstFn;
             }
-            if (fn == num||num==1||num==2)
+            if (fn == num || num == 1 || num == 2)
             {
                 return "yes";
             }
