@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
 
     class Program
     {
+       
 
 
         static void Main(string[] args)
@@ -22,7 +26,15 @@ namespace ConsoleApp1
             //Console.WriteLine(CoderByteChallange.FibonacciChecker(34));
             //Console.WriteLine(CoderByteChallange.HappyNumbers(28));Console.WriteLine(CoderByteChallange.HappyNumbers(101));
             //Console.WriteLine(CoderByteChallange.TripleDouble(465555, 5579));Console.WriteLine(CoderByteChallange.TripleDouble(67844, 66237));
-            Console.WriteLine(CoderByteChallange.PatternChaser("aabbaa"));
+            //Console.WriteLine(CoderByteChallange.PatternChaser("aabbaa"));
+
+
+            //string response = CoderByteChallange
+            //    .JSONCleaningGet("https://coderbyte.com/api/challenges/json/json-cleaning");
+
+            //Console.WriteLine(response);
+
+            CoderByteChallange.CsharpAgeCounting();
         }
 
     }
@@ -31,6 +43,74 @@ namespace ConsoleApp1
 
     public static class CoderByteChallange
     {
+        public static void CsharpAgeCounting()
+        {
+            WebRequest request = WebRequest.Create("https://coderbyte.com/api/challenges/json/age-counting");
+            WebResponse response = (HttpWebResponse)request.GetResponse();
+
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(dataStream);
+                string json = reader.ReadToEnd();
+
+                int ageCount = GetAgeCount(json);
+
+                Console.WriteLine(ageCount);
+            }
+
+            response.Close();
+        }
+
+        public static int GetAgeCount(string json)
+        {
+            json = json.Replace("\r\n", "").Replace("\n", "").Replace("\r", "").Replace(" ", "");
+            string content = json.Replace(@"{""data"":""", "").Replace("}", "");
+            string[] contentArr = content.Split(',');
+            int ageCounter = 0;
+
+            foreach (var item in contentArr)
+            {
+                if (item.IndexOf("age=") > -1)
+                {
+                    int age = int.TryParse(item.Split('=').Last(), out var parseAge) ? parseAge : 0;
+                    if (age >= 50) ageCounter++;
+                }
+            }
+
+            return ageCounter;
+        }
+
+        public static string JSONCleaningGet(string url)
+        {
+            string response = GetAsync(url).Result;
+            string filtered = FilterJsonResponse("{\"name\":{\"first\":\"Robert\",\"middle\":\"\",\"last\":\"Smith\"},\"age\":25,\"DOB\":\"-\",\"hobbies\":[\"running\",\"coding\",\"-\"],\"education\":{\"highschool\":\"N/A\",\"college\":\"Yale\"}}");
+
+            return filtered;
+        }
+
+        public static async Task<string> GetAsync(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return await reader.ReadToEndAsync();
+            }
+        }
+        private static string FilterJsonResponse(string jsonString)
+        {
+            string originalEmptyValues = "(\"\"|\"[-]\"|\"N\\/A\")";
+            string emptyPlaceholder = "#empty#";
+            string emptyKeyValues = "(\"[a-zA-Z]+\":#empty#,|,\"[a-zA-Z]+\":#empty#)";
+            string emptyArrayValues = "(#empty#,|,#empty#)";
+            string result = Regex.Replace(jsonString, originalEmptyValues, emptyPlaceholder);
+            result = Regex.Replace(result, emptyKeyValues, "");
+            result = Regex.Replace(result, emptyArrayValues, "");
+
+            return result;
+        }
 
         public static string PatternChaser(string str)
         {
@@ -49,29 +129,29 @@ namespace ConsoleApp1
             string value = "";
             for (int i = 0; i < str.Length; i++)
             {
-                if (i+1==str.Length)
+                if (i + 1 == str.Length)
                 {
                     break;
                 }
                 string removed = str;
-                removed=str.Remove(i,  2);
-                if (removed.Contains(str[i].ToString() + str[i+1].ToString()))
+                removed = str.Remove(i, 2);
+                if (removed.Contains(str[i].ToString() + str[i + 1].ToString()))
                 {
                     string localStr = str[i].ToString() + str[i + 1].ToString();
                     int locCount = i + 1;
-                    for (int j = i+1; j < str.Length; j++)
+                    for (int j = i + 1; j < str.Length; j++)
                     {
                         if (j + 1 == str.Length)
                         {
                             break;
                         }
-                        removed=removed.Remove(0, 1);
+                        removed = removed.Remove(0, 1);
                         string loclocalStr = localStr;
-                        loclocalStr+=str[j+1].ToString();
+                        loclocalStr += str[j + 1].ToString();
                         if (removed.Contains(loclocalStr))
                         {
-                            int loclocalCount = j+1;
-                            if (loclocalStr!=value&&loclocalCount>count)
+                            int loclocalCount = j + 1;
+                            if (loclocalStr != value && loclocalCount > count)
                             {
                                 count = loclocalCount;
                                 value = loclocalStr;
@@ -83,10 +163,10 @@ namespace ConsoleApp1
                     value = localStr;
                     count = locCount;
                 }
-               
+
             }
             // code goes here  
-            return "yes"+value;
+            return "yes" + value;
 
         }
         public static int TripleDouble(int num1, int num2)
@@ -125,7 +205,7 @@ namespace ConsoleApp1
             // code goes here  
             return 0;
 
-            
+
         }
         public static bool HappyNumbers(int n)
         {
